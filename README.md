@@ -1,2 +1,70 @@
-# docker
-Docker Images you may need use or contribute to initiated by dagobit
+# Protocol Buffers + Docker
+All inclusive protoc suite, powered by Docker and Alpine Linux. Enhanced the 
+Image of https://github.com/znly/docker-protobuf with Typescript support, 
+community Image pull-able from dagobit/protoc-ts
+
+## What's included:
+- protobuf 3.6.0.1
+- gRPC 1.13.0
+- gRPC-Web 1.0.0
+- Google Well Known Types are automatically included (via `google/`)
+- Go related tools compiled with 1.8.1, gRPC support is built-in:
+  - github.com/golang/protobuf/protoc-gen-go
+  - github.com/gogo/protobuf/protoc-gen-gofast
+  - github.com/gogo/protobuf/protoc-gen-gogo
+  - github.com/gogo/protobuf/protoc-gen-gogofast
+  - github.com/gogo/protobuf/protoc-gen-gogofaster
+  - github.com/gogo/protobuf/protoc-gen-gogoslick
+  - github.com/twitchtv/twirp/protoc-gen-twirp
+  - github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+  - github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
+  - github.com/mwitkow/go-proto-validators
+  - github.com/moul/protoc-gen-gotemplate
+  - github.com/micro/protoc-gen-micro
+
+## Supported languages
+- C
+- C#
+- C++
+- Go
+- Java / JavaNano (Android)
+- JavaScript
+- Objective-C
+- Python
+- Ruby
+- Rust
+- Swift 4
+- Typescript
+
+## Usage
+```
+$ docker run --rm dagobit/protoc-ts --help
+Usage: /usr/bin/protoc [OPTION] PROTO_FILES
+```
+
+Don't forget you need to bind mount your files:
+```
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) dagobit/protoc-ts --python_out=. -I. myfile.proto
+```
+
+## Google Well Known Types
+They are embedded in the image and are included by `protoc` automatically.
+They accessible via `google/protobuf/`:
+```protobuf
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+```
+
+## Gogo
+`gogo.proto` is embedded in the image and can be included with:
+```protobuf
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+```
+
+## Image Size
+The current image is about ~189mb and one layer. Most the space is spent on Go tools.
+All the binaries are UPX'ed. Including the Swift stdlib.
